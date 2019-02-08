@@ -1,17 +1,24 @@
 package main;
 
-class WordCapitalizator {
-    static String capitalizeWords(String words) {
+public class WordCapitalizator {
+    public static String capitalizeWords(String words) {
         char[] chars = words.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            if ((i == 0 || (!is_letter(chars[i - 1]))) && is_letter(chars[i]))
-                chars[i] = Character.toUpperCase(chars[i]);
-            if (i != 0 && is_letter(chars[i - 1]))
-                chars[i] = Character.toLowerCase(chars[i]);
+        if (('a' <= chars[0]) && (chars[0] <= 'z')) {
+            chars[0] = Character.toUpperCase(chars[0]);
         }
-        return new String(chars);
-    }
-    private static boolean is_letter(char ch) {
-        return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+        for (int i = 0; i < chars.length - 1; i++) {
+            if (chars[i] == ' ') {
+                chars[i + 1] = Character.toUpperCase(chars[i + 1]);
+            } else {
+                if (('A' <= chars[0]) && (chars[0] <= 'Z')) {
+                    chars[i + 1] = Character.toLowerCase(chars[i + 1]);
+                }
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (char aChar : chars) {
+            stringBuilder.append(aChar);
+        }
+        return stringBuilder.toString();
     }
 }
