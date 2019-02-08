@@ -13,6 +13,6 @@ class WordCapitalizatorTest {
         assertEquals("Vasya , Vasya", WordCapitalizator.capitalizeWords("vasYa , Vasya"));
         assertEquals(" Vasya - Vasya ", WordCapitalizator.capitalizeWords(" vasya - vasya "));
         assertEquals("", WordCapitalizator.capitalizeWords(""));
-        assertEquals("vasya-vasya", WordCapitalizator.capitalizeWords("Vasya-Vasya"));
+        assertEquals("Vasya-Vasya", WordCapitalizator.capitalizeWords("vasya-vasYa"));
     }
 }
