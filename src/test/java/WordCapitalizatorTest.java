@@ -1,9 +1,9 @@
 import static org.junit.Assert.assertEquals;
 
-class WordCapitalizatorTest {
+public class WordCapitalizatorTest {
 
-    @org.junit.jupiter.api.Test
-    void capitalizeWords() {
+    @org.junit.Test
+    public void capitalizeWords() {
         assertEquals("Hello, World", WordCapitalizator.capitalizeWords("heLlo, woRld"));
         assertEquals("Vasya , Vasya", WordCapitalizator.capitalizeWords("vasYa , Vasya"));
         assertEquals(" Vasya - Vasya ", WordCapitalizator.capitalizeWords(" vasya - vasya "));
