@@ -1,5 +1,3 @@
-package main;
-
 public class WordCapitalizator {
     public static String capitalizeWords(String words) {
         char[] chars = words.toCharArray();
