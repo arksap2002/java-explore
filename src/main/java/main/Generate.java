@@ -12,7 +12,7 @@ public class Generate {
     public static void main(String[] args) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString("/1.txt", Charset.defaultCharset()));
         compilationUnit.findAll(FieldDeclaration.class).stream()
-                .filter(f -> f.isPublic() && !f.isStatic())
+                .filter(f -> f.isPublic() && f.isStatic())
                 .forEach(f -> System.out.println("Check field at line " +
                         f.getRange().map(r -> r.begin.line).orElse(-1)));
 //        ClassOrInterfaceDeclaration myClass = compilationUnit
