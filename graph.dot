@@ -1,4 +1,0 @@
-digraph G{
-Vasya->Petya->Sasha->Dima;
-Petya->Dima;
-}
