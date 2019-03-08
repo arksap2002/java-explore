@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 class LearningJavaParserTest {
 
     @Test
-    void main() throws IOException {
+    void parsing() throws IOException {
         assertEquals(IOUtils.resourceToString("/Test1.txt", Charset.defaultCharset()), main.LearningJavaParser.parsing("1.txt"));
     }
 }
