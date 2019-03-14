@@ -1,4 +1,4 @@
-package javaparser;
+package com.example.parsing;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -11,10 +11,14 @@ import java.nio.charset.Charset;
 
 public class ChangeIntToLong {
     public static void main(String[] args) throws IOException {
-        CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString("/1.txt", Charset.defaultCharset()));
+        System.out.println(changing("/1.txt"));
+    }
+
+    public static String changing(String filename) throws IOException {
+        CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         compilationUnit.findAll(VariableDeclarator.class).stream()
                 .filter(f -> f.getType().equals(PrimitiveType.intType()))
                 .forEach(f -> f.setType(PrimitiveType.longType()));
-        System.out.println(compilationUnit.toString());
+        return compilationUnit.toString();
     }
 }
