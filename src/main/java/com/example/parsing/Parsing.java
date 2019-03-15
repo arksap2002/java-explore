@@ -14,6 +14,13 @@ public class Parsing {
 
     public static String parsing(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
+//        DotPrinter printer = new DotPrinter(true);
+//        try (FileWriter fileWriter = new FileWriter("ast.dot");
+//             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+//            printWriter.print(printer.output(compilationUnit));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return compilationUnit.toString();
     }
 }

@@ -1,10 +1,12 @@
 public class Hello {
+
     public static int N = 17;
+
     public static void main(String[] args) {
         // write your code here
         int a = 1;
         int b = 2;
-        int x = a + b;
+        int x = a - b;
         Integer x;
         System.out.println("Hello World!");
     }
