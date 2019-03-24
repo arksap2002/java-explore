@@ -12,7 +12,7 @@ class RemoveFieldsTest {
 
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoFields", Charset.defaultCharset()), RemoveFields.transformResource("/input.java"));
+        assertEquals(IOUtils.resourceToString("/NoFields.java", Charset.defaultCharset()), RemoveFields.transformResource("/input.java"));
 
     }
 }

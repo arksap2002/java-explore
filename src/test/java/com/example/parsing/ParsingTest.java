@@ -12,6 +12,6 @@ class ParsingTest {
 
     @Test
     void parsing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/PrintCode", Charset.defaultCharset()), Parsing.transformResource("/input.java"));
+        assertEquals(IOUtils.resourceToString("/PrintCode.java", Charset.defaultCharset()), Parsing.transformResource("/input.java"));
     }
 }

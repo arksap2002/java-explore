@@ -12,6 +12,6 @@ class RemoveSystemOutPrintlnTest {
 
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoSystemoutplintln", Charset.defaultCharset()), RemoveSystemOutPrintln.transformResource("/input.java"));
+        assertEquals(IOUtils.resourceToString("/NoSystemoutplintln.java", Charset.defaultCharset()), RemoveSystemOutPrintln.transformResource("/input.java"));
     }
 }

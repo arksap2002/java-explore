@@ -11,6 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class MinusInsteadOfPlusTest {
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/PlusToMinus", Charset.defaultCharset()), MinusInsteadOfPlus.transformResource("/input.java"));
+        assertEquals(IOUtils.resourceToString("/PlusToMinus.java", Charset.defaultCharset()), MinusInsteadOfPlus.transformResource("/input.java"));
     }
 }

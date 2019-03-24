@@ -11,6 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RemoveClassMembersTest {
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoClassMembers", Charset.defaultCharset()), RemoveClassMembers.transformResource("/input.java"));
+        assertEquals(IOUtils.resourceToString("/NoClassMembers.java", Charset.defaultCharset()), RemoveClassMembers.transformResource("/input.java"));
     }
 }

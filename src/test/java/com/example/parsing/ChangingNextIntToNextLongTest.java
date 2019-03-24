@@ -12,6 +12,6 @@ class ChangingNextIntToNextLongTest {
 
     @Test
     void changing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NextLongInsteadOfNextInt", Charset.defaultCharset()), ChangingNextIntToNextLong.transformResource("/input.java"));
+        assertEquals(IOUtils.resourceToString("/NextLongInsteadOfNextInt.java", Charset.defaultCharset()), ChangingNextIntToNextLong.transformResource("/input.java"));
     }
 }
