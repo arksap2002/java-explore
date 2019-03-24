@@ -11,10 +11,10 @@ import java.nio.charset.Charset;
 
 public class RemoveClassMembers {
     public static void main(String[] args) throws IOException {
-        System.out.println(revoming("/1.txt"));
+        System.out.println(transformResource("/input.java"));
     }
 
-    public static String revoming(String filename) throws IOException {
+    public static String transformResource(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         compilationUnit.findAll(FieldDeclaration.class)
                 .forEach(Node::removeForced);

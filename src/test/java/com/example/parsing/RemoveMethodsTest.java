@@ -12,6 +12,6 @@ class RemoveMethodsTest {
 
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoMethods", Charset.defaultCharset()), RemoveMethods.removing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/NoMethods", Charset.defaultCharset()), RemoveMethods.transformResource("/input.java"));
     }
 }

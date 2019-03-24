@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ChangeIntToLongTest {
     @Test
     void changing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/LongInsteadOfInt", Charset.defaultCharset()), ChangeIntToLong.changing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/LongInsteadOfInt", Charset.defaultCharset()), ChangeIntToLong.transformResource("/input.java"));
     }
 
 }

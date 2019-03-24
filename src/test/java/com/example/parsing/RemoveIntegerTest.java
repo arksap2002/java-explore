@@ -12,7 +12,7 @@ class RemoveIntegerTest {
 
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoInteger", Charset.defaultCharset()), RemoveInteger.removing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/NoInteger", Charset.defaultCharset()), RemoveInteger.transformResource("/input.java"));
 
     }
 }

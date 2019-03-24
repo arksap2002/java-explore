@@ -12,6 +12,6 @@ class ChangingOutToArrTest {
 
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/SystemerrInsteadOfSystemout", Charset.defaultCharset()), ChangingOutToArr.changing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/SystemerrInsteadOfSystemout", Charset.defaultCharset()), ChangingOutToArr.transformResource("/input.java"));
     }
 }

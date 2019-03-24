@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class IntMultiplyBy10Test {
     @Test
     void changing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/AllIntFor10", Charset.defaultCharset()), IntMultiplyBy10.changing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/AllIntFor10", Charset.defaultCharset()), IntMultiplyBy10.transformResource("/input.java"));
     }
 
 }

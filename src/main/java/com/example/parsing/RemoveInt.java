@@ -12,10 +12,10 @@ import java.nio.charset.Charset;
 
 public class RemoveInt {
     public static void main(String[] args) throws IOException {
-        System.out.println(removing("/1.txt"));
+        System.out.println(transformResource("/input.java"));
     }
 
-    public static String removing(String filename) throws IOException {
+    public static String transformResource(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         compilationUnit.findAll(FieldDeclaration.class).stream()
                 .filter(f -> f.getElementType().toString().startsWith("int"))

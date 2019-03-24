@@ -12,7 +12,7 @@ class MinusInsteadOfPlusAndPlusInsteadOfMultiplikationTest {
 
     @Test
     void changing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/PlusToMinusAndMultiplyToPlus", Charset.defaultCharset()), MinusInsteadOfPlusAndPlusInsteadOfMultiplikation.changing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/PlusToMinusAndMultiplyToPlus", Charset.defaultCharset()), MinusInsteadOfPlusAndPlusInsteadOfMultiplikation.transformResource("/input.java"));
 
     }
 }

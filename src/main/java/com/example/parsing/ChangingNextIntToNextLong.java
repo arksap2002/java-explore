@@ -14,10 +14,10 @@ import java.nio.charset.Charset;
 public class ChangingNextIntToNextLong {
     private static String scanner_name = "";
     public static void main(String[] args) throws IOException {
-        System.out.println(changing("/1.txt"));
+        System.out.println(transformResource("/input.java"));
     }
     //
-    public static String changing(String filename) throws IOException {
+    public static String transformResource(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         compilationUnit.findAll(VariableDeclarator.class).stream()
                 .filter(f -> {

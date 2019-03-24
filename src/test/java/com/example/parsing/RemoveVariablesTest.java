@@ -12,6 +12,6 @@ class RemoveVariablesTest {
 
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoVariables", Charset.defaultCharset()), RemoveVariables.removing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/NoVariables", Charset.defaultCharset()), RemoveVariables.transformResource("/input.java"));
     }
 }

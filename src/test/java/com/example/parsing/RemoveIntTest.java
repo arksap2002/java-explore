@@ -12,6 +12,6 @@ class RemoveIntTest {
 
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoInt", Charset.defaultCharset()), RemoveInt.removing("/1.txt"));
+        assertEquals(IOUtils.resourceToString("/NoInt", Charset.defaultCharset()), RemoveInt.transformResource("/input.java"));
     }
 }
