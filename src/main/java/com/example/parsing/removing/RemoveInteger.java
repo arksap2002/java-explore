@@ -1,4 +1,4 @@
-package com.example.parsing;
+package com.example.parsing.removing;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;

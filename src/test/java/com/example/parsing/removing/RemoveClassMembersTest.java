@@ -1,6 +1,7 @@
-package com.example.parsing;
+package com.example.parsing.removing;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,6 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RemoveClassMembersTest {
     @Test
     void removing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/NoClassMembers.java", Charset.defaultCharset()), RemoveClassMembers.transformResource("/input.java"));
+        Assertions.assertEquals(IOUtils.resourceToString("/NoClassMembers.java", Charset.defaultCharset()), RemoveClassMembers.transformResource("/input.java"));
     }
 }
