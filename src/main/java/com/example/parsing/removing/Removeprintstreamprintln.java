@@ -2,6 +2,7 @@ package com.example.parsing.removing;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
@@ -15,13 +16,25 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 public class Removeprintstreamprintln {
+    public static boolean flag = false;
+    public static String name = "";
     public static ArrayList<MethodCallExpr> methodCallExprs = new ArrayList<>();
-    static class TypeCalculatorVisitor extends VoidVisitorAdapter<JavaParserFacade> {
+    static class Finding extends VoidVisitorAdapter<JavaParserFacade> {
+        @Override
+        public void visit(VariableDeclarator n, JavaParserFacade javaParserFacade) {
+            super.visit(n, javaParserFacade);
+            if (n.getType().isClassOrInterfaceType() && n.getType().asClassOrInterfaceType().getName().toString().equals("PrintStream")){
+                flag = true;
+                name = n.getName().toString();
+            }
+        }
+    }
+    static class Searching extends VoidVisitorAdapter<JavaParserFacade> {
         @Override
         public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
             if (n.getName().toString().equals("println")) {
-                if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals("printStream")) {
+                if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals(name)) {
                     methodCallExprs.add(n);
                 }
             }
@@ -35,9 +48,12 @@ public class Removeprintstreamprintln {
     public static String removing(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
-        compilationUnit.accept(new TypeCalculatorVisitor(), JavaParserFacade.get(typeSolver));
-        for (int i = 0; i < methodCallExprs.size(); i++){
-            methodCallExprs.get(i).removeForced();
+        compilationUnit.accept(new Finding(), JavaParserFacade.get(typeSolver));
+        if (flag){
+            compilationUnit.accept(new Searching(), JavaParserFacade.get(typeSolver));
+        }
+        for (MethodCallExpr methodCallExpr : methodCallExprs) {
+            methodCallExpr.removeForced();
         }
         return compilationUnit.toString();
     }
