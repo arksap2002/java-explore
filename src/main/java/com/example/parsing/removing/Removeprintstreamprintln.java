@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class Removeprintstreamprintln {
     public static boolean flag = false;
-    public static String name = "";
+    public static ArrayList<String> names = new ArrayList<>();
     public static ArrayList<MethodCallExpr> methodCallExprs = new ArrayList<>();
     public static ArrayList<VariableDeclarator> variableDeclarators = new ArrayList<>();
 
@@ -27,7 +27,7 @@ public class Removeprintstreamprintln {
             super.visit(n, javaParserFacade);
             if (n.getType().isClassOrInterfaceType() && n.getType().asClassOrInterfaceType().getName().toString().equals("PrintStream")) {
                 flag = true;
-                name = n.getName().toString();
+                names.add(n.getName().toString());
             }
         }
     }
@@ -47,8 +47,10 @@ public class Removeprintstreamprintln {
         public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
             if (n.getName().toString().equals("println")) {
-                if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals(name)) {
-                    methodCallExprs.add(n);
+                for (int i = 0; i < names.size(); i++){
+                    if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals(names.get(i))) {
+                        methodCallExprs.add(n);
+                    }
                 }
             }
         }
@@ -59,12 +61,14 @@ public class Removeprintstreamprintln {
         public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
             if (n.getName().toString().equals("println")) {
-                if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals(name)) {
-                    for (int i = 0; i < n.getArguments().size(); i++){
-                        if (n.getArguments().get(i).isNameExpr()){
-                            for (VariableDeclarator variableDeclarator : variableDeclarators) {
-                                if (n.getArguments().get(i).asNameExpr().getName().toString().equals(variableDeclarator.getName().toString())) {
-                                    methodCallExprs.add(n);
+                for (int j = 0; j < names.size(); j++) {
+                    if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals(names.get(j))) {
+                        for (int i = 0; i < n.getArguments().size(); i++) {
+                            if (n.getArguments().get(i).isNameExpr()) {
+                                for (VariableDeclarator variableDeclarator : variableDeclarators) {
+                                    if (n.getArguments().get(i).asNameExpr().getName().toString().equals(variableDeclarator.getName().toString())) {
+                                        methodCallExprs.add(n);
+                                    }
                                 }
                             }
                         }
@@ -79,10 +83,12 @@ public class Removeprintstreamprintln {
         public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
             if (n.getName().toString().equals("println")) {
-                if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals(name)) {
-                    for (int i = 0; i < n.getArguments().size(); i++){
-                        if (n.getArguments().get(i).isStringLiteralExpr()){
-                            methodCallExprs.add(n);
+                for (int j = 0; j < names.size(); j++) {
+                    if (n.getScope().get().isNameExpr() && n.getScope().get().asNameExpr().getName().toString().equals(names.get(j))) {
+                        for (int i = 0; i < n.getArguments().size(); i++) {
+                            if (n.getArguments().get(i).isStringLiteralExpr()) {
+                                methodCallExprs.add(n);
+                            }
                         }
                     }
                 }
@@ -92,7 +98,7 @@ public class Removeprintstreamprintln {
 
 
     public static void main(String[] args) throws IOException {
-        System.out.println(removing_string("/input2.java"));
+        System.out.println(removing_int("/input2.java"));
     }
 
     public static String removing_all(String filename) throws IOException {
