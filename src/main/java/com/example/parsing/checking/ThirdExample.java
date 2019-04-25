@@ -1,4 +1,4 @@
-package com.example.parsing;
+package com.example.parsing.checking;
 
 public class ThirdExample {
     public static int a = 17;
