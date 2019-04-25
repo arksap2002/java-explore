@@ -1,14 +1,17 @@
-package com.example.parsing;
+package com.example.parsing.checking;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class SecondExample {
     public static int N = 17;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // write your code here
-        PrintStream printStream = new PrintStream(System.out);
-        java.io.PrintStream printStream1 = new PrintStream(System.out);
+        File file = new File("C:\\Users\\arksa\\Desktop\\Практика\\java-explore\\a.txt");
+        PrintStream printStream = new PrintStream();
+        java.io.PrintStream printStream1 = new java.io.PrintStream(file);
         Scanner scanner = new Scanner(System.in);
         int a = scanner.nextInt();
         int b = scanner.nextInt();
@@ -23,6 +26,7 @@ public class SecondExample {
 
     static class PrintStream {
         int point = 10;
+
 
         public static void println(Object object) {
             System.out.println(object);

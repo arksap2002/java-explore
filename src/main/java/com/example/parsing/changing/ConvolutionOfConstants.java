@@ -24,18 +24,18 @@ public class ConvolutionOfConstants {
         @Override
         public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
-            if (n.getLeft().isBinaryExpr()) {
-                visit(n.getLeft().asBinaryExpr(), javaParserFacade);
-            }
-            if (n.getLeft().isEnclosedExpr() && n.getLeft().asEnclosedExpr().getInner().isBinaryExpr()){
-                visit(n.getLeft().asEnclosedExpr().getInner().asBinaryExpr(), javaParserFacade);
-            }
-            if (n.getRight().isBinaryExpr()) {
-                visit(n.getRight().asBinaryExpr(), javaParserFacade);
-            }
-            if (n.getRight().isEnclosedExpr() && n.getRight().asEnclosedExpr().getInner().isBinaryExpr()){
-                visit(n.getRight().asEnclosedExpr().getInner().asBinaryExpr(), javaParserFacade);
-            }
+//            if (n.getLeft().isBinaryExpr()) {
+//                visit(n.getLeft().asBinaryExpr(), javaParserFacade);
+//            }
+//            if (n.getLeft().isEnclosedExpr() && n.getLeft().asEnclosedExpr().getInner().isBinaryExpr()){
+//                visit(n.getLeft().asEnclosedExpr().getInner().asBinaryExpr(), javaParserFacade);
+//            }
+//            if (n.getRight().isBinaryExpr()) {
+//                visit(n.getRight().asBinaryExpr(), javaParserFacade);
+//            }
+//            if (n.getRight().isEnclosedExpr() && n.getRight().asEnclosedExpr().getInner().isBinaryExpr()){
+//                visit(n.getRight().asEnclosedExpr().getInner().asBinaryExpr(), javaParserFacade);
+//            }
             if ((n.getLeft().isIntegerLiteralExpr() || (n.getLeft().isEnclosedExpr() && n.getLeft().asEnclosedExpr().getInner().isIntegerLiteralExpr())) && (n.getRight().isIntegerLiteralExpr() || (n.getRight().isEnclosedExpr() && n.getRight().asEnclosedExpr().getInner().isIntegerLiteralExpr()))) {
                 IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
                 IntegerLiteralExpr left = new IntegerLiteralExpr();

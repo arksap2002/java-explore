@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-public class Removeprintstreamprintln {
+public class RemovePrintStreamPrintln {
     public static boolean flag = false;
     public static ArrayList<String> names = new ArrayList<>();
     public static ArrayList<MethodCallExpr> methodCallExprs = new ArrayList<>();
