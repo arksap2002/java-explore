@@ -8,7 +8,7 @@ public class SecondExample {
     public static void main(String[] args) {
         // write your code here
         PrintStream printStream = new PrintStream(System.out);
-        PrintStream printStream1 = new PrintStream(System.out);
+        java.io.PrintStream printStream1 = new PrintStream(System.out);
         Scanner scanner = new Scanner(System.in);
         int a = scanner.nextInt();
         int b = scanner.nextInt();
@@ -16,7 +16,7 @@ public class SecondExample {
         int y = a * b;
         Integer z = 3;
         printStream1.println(z);
-        java.io.printStream.println(x);
+        printStream.println(x);
         printStream.println("hello");
         System.out.println("Hello World!");
     }
