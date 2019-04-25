@@ -1,6 +1,9 @@
-public class Hello {
+package com.example.parsing;
+
+public class FirstExample {
+
     public static void main(String[] args) {
-        // write your code here
+        printStream.println(z);
         System.out.println("Hello World!");
     }
 }
