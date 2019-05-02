@@ -3,6 +3,7 @@ package com.example.parsing.changing;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
@@ -19,36 +20,19 @@ public class ConvolutionOfConstants {
         System.out.println(transformResource("/input3.java"));
     }
 
-    static class Finding_operators extends VoidVisitorAdapter<JavaParserFacade> {
-
+    static class Finding_binary extends VoidVisitorAdapter<JavaParserFacade>{
         @Override
         public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
-//            if (n.getLeft().isBinaryExpr()) {
-//                visit(n.getLeft().asBinaryExpr(), javaParserFacade);
-//            }
-//            if (n.getLeft().isEnclosedExpr() && n.getLeft().asEnclosedExpr().getInner().isBinaryExpr()){
-//                visit(n.getLeft().asEnclosedExpr().getInner().asBinaryExpr(), javaParserFacade);
-//            }
-//            if (n.getRight().isBinaryExpr()) {
-//                visit(n.getRight().asBinaryExpr(), javaParserFacade);
-//            }
-//            if (n.getRight().isEnclosedExpr() && n.getRight().asEnclosedExpr().getInner().isBinaryExpr()){
-//                visit(n.getRight().asEnclosedExpr().getInner().asBinaryExpr(), javaParserFacade);
-//            }
-            if ((n.getLeft().isIntegerLiteralExpr() || (n.getLeft().isEnclosedExpr() && n.getLeft().asEnclosedExpr().getInner().isIntegerLiteralExpr())) && (n.getRight().isIntegerLiteralExpr() || (n.getRight().isEnclosedExpr() && n.getRight().asEnclosedExpr().getInner().isIntegerLiteralExpr()))) {
+            if (n.getLeft().isIntegerLiteralExpr() && n.getRight().isIntegerLiteralExpr()){
                 IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
                 IntegerLiteralExpr left = new IntegerLiteralExpr();
                 IntegerLiteralExpr right = new IntegerLiteralExpr();
                 if (n.getLeft().isIntegerLiteralExpr()){
                     left = n.getLeft().asIntegerLiteralExpr();
-                }else{
-                    left = n.getLeft().asEnclosedExpr().getInner().asIntegerLiteralExpr();
                 }
                 if (n.getRight().isIntegerLiteralExpr()){
                     right = n.getRight().asIntegerLiteralExpr();
-                }else{
-                    right = n.getRight().asEnclosedExpr().getInner().asIntegerLiteralExpr();
                 }
                 if (n.getOperator() == BinaryExpr.Operator.PLUS) {
                     integerLiteralExpr.setInt(left.asInt() + right.asInt());
@@ -67,11 +51,21 @@ public class ConvolutionOfConstants {
         }
     }
 
+    static class Finding_enclose extends VoidVisitorAdapter<JavaParserFacade> {
+        @Override
+        public void visit(EnclosedExpr n, JavaParserFacade javaParserFacade) {
+            super.visit(n, javaParserFacade);
+            if (n.getInner().isBinaryExpr()){
+                n.replace(n.getInner().asBinaryExpr());
+            }
+        }
+    }
+
     public static String transformResource(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
-        compilationUnit.accept(new Finding_operators(), JavaParserFacade.get(typeSolver));
-        //
+        compilationUnit.accept(new Finding_enclose(), JavaParserFacade.get(typeSolver));
+        compilationUnit.accept(new Finding_binary(), JavaParserFacade.get(typeSolver));
         return compilationUnit.toString();
     }
 }
