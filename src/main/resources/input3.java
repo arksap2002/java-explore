@@ -12,5 +12,7 @@ public class ThirdExample {
         int h = 6 - 8;
         int k = 2 / 3;
         int l = -g;
+        int m = 2 * a - a;
+        int n = b - b;
     }
 }
