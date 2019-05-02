@@ -94,6 +94,21 @@ public class ConvolutionOfConstants {
         }
     }
 
+    static class Finding_variable extends VoidVisitorAdapter<JavaParserFacade> {
+        @Override
+        public void visit(VariableDeclarator n, JavaParserFacade javaParserFacade) {
+            super.visit(n, javaParserFacade);
+            if (n.getInitializer().get().isNameExpr()) {
+                for (VariableDeclarator variableDeclarator : variableDeclarators) {
+                    if (variableDeclarator.getName().toString().equals(n.getInitializer().get().toString())) {
+                        n.setInitializer(variableDeclarator.getInitializer().get());
+                        change = true;
+                    }
+                }
+            }
+        }
+    }
+
     public static String transformResource(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
@@ -103,6 +118,11 @@ public class ConvolutionOfConstants {
             compilationUnit.accept(new Finding_name(), JavaParserFacade.get(typeSolver));
             compilationUnit.accept(new Finding_enclose(), JavaParserFacade.get(typeSolver));
             compilationUnit.accept(new Finding_binary(), JavaParserFacade.get(typeSolver));
+            compilationUnit.accept(new Finding_variable(), JavaParserFacade.get(typeSolver));
+//            for (VariableDeclarator variableDeclarator : variableDeclarators) {
+//                System.out.print(variableDeclarator.getName().toString() + " ");
+//            }
+//            System.out.println();
         }
         return compilationUnit.toString();
     }

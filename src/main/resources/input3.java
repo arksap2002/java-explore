@@ -14,5 +14,6 @@ public class ThirdExample {
         int l = -g;
         int m = 2 * a - a;
         int n = b - b;
+        int o = g;
     }
 }
