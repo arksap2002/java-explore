@@ -6,6 +6,7 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
@@ -22,7 +23,7 @@ public class ConvolutionOfConstants {
     public static boolean change = true;
 
     public static void main(String[] args) throws IOException {
-        System.out.println(transformResource("/input3.java"));
+        System.out.println(transformResource("/input5.java"));
     }
 
     static class Finding_binary extends VoidVisitorAdapter<JavaParserFacade> {
@@ -54,6 +55,13 @@ public class ConvolutionOfConstants {
                 n.replace(integerLiteralExpr);
                 change = true;
             }
+        }
+    }
+
+    static class Changing_name_to_int extends VoidVisitorAdapter<JavaParserFacade> {
+        @Override
+        public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
+            super.visit(n, javaParserFacade);
             if (n.getLeft().isNameExpr()) {
                 for (VariableDeclarator variableDeclarator : variableDeclarators) {
                     if (variableDeclarator.getName().toString().equals(n.getLeft().toString())) {
@@ -84,6 +92,59 @@ public class ConvolutionOfConstants {
         }
     }
 
+    static class Finding_multiply extends VoidVisitorAdapter<JavaParserFacade> {
+        @Override
+        public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
+            super.visit(n, javaParserFacade);
+            if ((n.getLeft().isIntegerLiteralExpr()) && (n.getRight().isNameExpr()) && (n.getOperator() == BinaryExpr.Operator.MULTIPLY)){
+                if (n.getLeft().asIntegerLiteralExpr().asInt() == 2){
+                    n.setOperator(BinaryExpr.Operator.PLUS);
+                    NameExpr nameExpr = n.getRight().asNameExpr();
+                    n.setLeft(nameExpr);
+                    n.setRight(nameExpr);
+                    change = true;
+                }
+                if (n.getLeft().asIntegerLiteralExpr().asInt() == 1){
+                    NameExpr nameExpr = n.getRight().asNameExpr();
+                    n.replace(nameExpr);
+                }
+                if (n.getLeft().asIntegerLiteralExpr().asInt() > 2){
+                    n.setOperator(BinaryExpr.Operator.PLUS);
+                    IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
+                    integerLiteralExpr.setInt(n.getLeft().asIntegerLiteralExpr().asInt() - 1);
+                    BinaryExpr binaryExpr = new BinaryExpr();
+                    binaryExpr.setOperator(BinaryExpr.Operator.MULTIPLY);
+                    binaryExpr.setRight(n.getRight());
+                    binaryExpr.setLeft(integerLiteralExpr);
+                    n.replace(binaryExpr);
+                }
+            }
+            if ((n.getRight().isIntegerLiteralExpr()) && (n.getLeft().isNameExpr()) && (n.getOperator() == BinaryExpr.Operator.MULTIPLY)){
+                if (n.getRight().asIntegerLiteralExpr().asInt() == 2){
+                    n.setOperator(BinaryExpr.Operator.PLUS);
+                    NameExpr nameExpr = n.getLeft().asNameExpr();
+                    n.setLeft(nameExpr);
+                    n.setRight(nameExpr);
+                    change = true;
+                }
+                if (n.getRight().asIntegerLiteralExpr().asInt() == 1){
+                    NameExpr nameExpr = n.getLeft().asNameExpr();
+                    n.replace(nameExpr);
+                }
+                if (n.getRight().asIntegerLiteralExpr().asInt() > 2){
+                    n.setOperator(BinaryExpr.Operator.PLUS);
+                    IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
+                    integerLiteralExpr.setInt(n.getRight().asIntegerLiteralExpr().asInt() - 1);
+                    BinaryExpr binaryExpr = new BinaryExpr();
+                    binaryExpr.setOperator(BinaryExpr.Operator.MULTIPLY);
+                    binaryExpr.setRight(n.getLeft());
+                    binaryExpr.setLeft(integerLiteralExpr);
+                    n.replace(binaryExpr);
+                }
+            }
+        }
+    }
+
     static class Finding_name extends VoidVisitorAdapter<JavaParserFacade> {
         @Override
         public void visit(VariableDeclarator n, JavaParserFacade javaParserFacade) {
@@ -109,6 +170,16 @@ public class ConvolutionOfConstants {
         }
     }
 
+    static class Finding_binary_name extends VoidVisitorAdapter<JavaParserFacade> {
+        @Override
+        public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
+            super.visit(n, javaParserFacade);
+//            if ((n.getOperator() == BinaryExpr.Operator.PLUS) && (n.getRight().isNameExpr()) && (n.getLeft().isNameExpr()) && ()){
+//
+//            }
+        }
+    }
+
     public static String transformResource(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
@@ -116,13 +187,12 @@ public class ConvolutionOfConstants {
             change = false;
             variableDeclarators.clear();
             compilationUnit.accept(new Finding_name(), JavaParserFacade.get(typeSolver));
-            compilationUnit.accept(new Finding_enclose(), JavaParserFacade.get(typeSolver));
             compilationUnit.accept(new Finding_binary(), JavaParserFacade.get(typeSolver));
             compilationUnit.accept(new Finding_variable(), JavaParserFacade.get(typeSolver));
-//            for (VariableDeclarator variableDeclarator : variableDeclarators) {
-//                System.out.print(variableDeclarator.getName().toString() + " ");
-//            }
-//            System.out.println();
+            compilationUnit.accept(new Finding_multiply(), JavaParserFacade.get(typeSolver));
+            compilationUnit.accept(new Finding_enclose(), JavaParserFacade.get(typeSolver));
+            compilationUnit.accept(new Finding_binary_name(), JavaParserFacade.get(typeSolver));
+//            compilationUnit.accept(new Changing_name_to_int(), JavaParserFacade.get(typeSolver));
         }
         return compilationUnit.toString();
     }

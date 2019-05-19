@@ -9,5 +9,8 @@ public class ConvolutionOfConstantsTest2 {
         final int e = d + c;
         final int f = e;
         final int g = f + 1;
+        final int e = a - a;
+        final int k = 2 * a + 10 * a;
+        final int l = a;
     }
 }
