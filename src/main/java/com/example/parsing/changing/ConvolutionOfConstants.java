@@ -2,13 +2,15 @@ package com.example.parsing.changing;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
-import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.github.javaparser.resolution.declarations.ResolvedValueDeclaration;
+import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
+import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserFieldDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
@@ -16,10 +18,10 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+
+import static com.github.javaparser.ast.Node.SYMBOL_RESOLVER_KEY;
 
 public class ConvolutionOfConstants {
-    public static ArrayList<VariableDeclarator> variableDeclarators = new ArrayList<>();
     public static boolean change = true;
 
     public static void main(String[] args) throws IOException {
@@ -58,114 +60,15 @@ public class ConvolutionOfConstants {
         }
     }
 
-    static class Changing_name_to_int extends VoidVisitorAdapter<JavaParserFacade> {
-        @Override
-        public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
-            super.visit(n, javaParserFacade);
-            if (n.getLeft().isNameExpr()) {
-                for (VariableDeclarator variableDeclarator : variableDeclarators) {
-                    if (variableDeclarator.getName().toString().equals(n.getLeft().toString())) {
-                        n.getLeft().replace(variableDeclarator.getInitializer().get());
-                        change = true;
-                    }
-                }
-            }
-            if (n.getRight().isNameExpr()) {
-                for (VariableDeclarator variableDeclarator : variableDeclarators) {
-                    if (variableDeclarator.getName().toString().equals(n.getRight().toString())) {
-                        n.getRight().replace(variableDeclarator.getInitializer().get());
-                        change = true;
-                    }
-                }
-            }
-        }
-    }
-
     static class Finding_enclose extends VoidVisitorAdapter<JavaParserFacade> {
         @Override
         public void visit(EnclosedExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
-            if (n.getInner().isBinaryExpr()) {
-                n.replace(n.getInner().asBinaryExpr());
+            if (n.getInner().isIntegerLiteralExpr()) {
+                IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
+                integerLiteralExpr.setInt(n.getInner().asIntegerLiteralExpr().asInt());
+                n.replace(integerLiteralExpr);
                 change = true;
-            }
-        }
-    }
-
-    static class Finding_multiply extends VoidVisitorAdapter<JavaParserFacade> {
-        @Override
-        public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
-            super.visit(n, javaParserFacade);
-            if ((n.getLeft().isIntegerLiteralExpr()) && (n.getRight().isNameExpr()) && (n.getOperator() == BinaryExpr.Operator.MULTIPLY)){
-                if (n.getLeft().asIntegerLiteralExpr().asInt() == 2){
-                    n.setOperator(BinaryExpr.Operator.PLUS);
-                    NameExpr nameExpr = n.getRight().asNameExpr();
-                    n.setLeft(nameExpr);
-                    n.setRight(nameExpr);
-                    change = true;
-                }
-                if (n.getLeft().asIntegerLiteralExpr().asInt() == 1){
-                    NameExpr nameExpr = n.getRight().asNameExpr();
-                    n.replace(nameExpr);
-                }
-                if (n.getLeft().asIntegerLiteralExpr().asInt() > 2){
-                    n.setOperator(BinaryExpr.Operator.PLUS);
-                    IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
-                    integerLiteralExpr.setInt(n.getLeft().asIntegerLiteralExpr().asInt() - 1);
-                    BinaryExpr binaryExpr = new BinaryExpr();
-                    binaryExpr.setOperator(BinaryExpr.Operator.MULTIPLY);
-                    binaryExpr.setRight(n.getRight());
-                    binaryExpr.setLeft(integerLiteralExpr);
-                    n.replace(binaryExpr);
-                }
-            }
-            if ((n.getRight().isIntegerLiteralExpr()) && (n.getLeft().isNameExpr()) && (n.getOperator() == BinaryExpr.Operator.MULTIPLY)){
-                if (n.getRight().asIntegerLiteralExpr().asInt() == 2){
-                    n.setOperator(BinaryExpr.Operator.PLUS);
-                    NameExpr nameExpr = n.getLeft().asNameExpr();
-                    n.setLeft(nameExpr);
-                    n.setRight(nameExpr);
-                    change = true;
-                }
-                if (n.getRight().asIntegerLiteralExpr().asInt() == 1){
-                    NameExpr nameExpr = n.getLeft().asNameExpr();
-                    n.replace(nameExpr);
-                }
-                if (n.getRight().asIntegerLiteralExpr().asInt() > 2){
-                    n.setOperator(BinaryExpr.Operator.PLUS);
-                    IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
-                    integerLiteralExpr.setInt(n.getRight().asIntegerLiteralExpr().asInt() - 1);
-                    BinaryExpr binaryExpr = new BinaryExpr();
-                    binaryExpr.setOperator(BinaryExpr.Operator.MULTIPLY);
-                    binaryExpr.setRight(n.getLeft());
-                    binaryExpr.setLeft(integerLiteralExpr);
-                    n.replace(binaryExpr);
-                }
-            }
-        }
-    }
-
-    static class Finding_name extends VoidVisitorAdapter<JavaParserFacade> {
-        @Override
-        public void visit(VariableDeclarator n, JavaParserFacade javaParserFacade) {
-            super.visit(n, javaParserFacade);
-            if (n.getInitializer().get().isIntegerLiteralExpr()) {
-                variableDeclarators.add(n);
-            }
-        }
-    }
-
-    static class Finding_variable extends VoidVisitorAdapter<JavaParserFacade> {
-        @Override
-        public void visit(VariableDeclarator n, JavaParserFacade javaParserFacade) {
-            super.visit(n, javaParserFacade);
-            if (n.getInitializer().get().isNameExpr()) {
-                for (VariableDeclarator variableDeclarator : variableDeclarators) {
-                    if (variableDeclarator.getName().toString().equals(n.getInitializer().get().toString())) {
-                        n.setInitializer(variableDeclarator.getInitializer().get());
-                        change = true;
-                    }
-                }
             }
         }
     }
@@ -174,25 +77,32 @@ public class ConvolutionOfConstants {
         @Override
         public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
             super.visit(n, javaParserFacade);
-//            if ((n.getOperator() == BinaryExpr.Operator.PLUS) && (n.getRight().isNameExpr()) && (n.getLeft().isNameExpr()) && ()){
-//
-//            }
+            IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
+            integerLiteralExpr.setInt(0);
+            if ((n.getOperator() == BinaryExpr.Operator.MINUS) && (n.getRight().isNameExpr()) && (n.getLeft().isNameExpr())) {
+                ResolvedValueDeclaration resolvedValueDeclaration_r = n.getRight().asNameExpr().resolve();
+                ResolvedValueDeclaration resolvedValueDeclaration_l = n.getLeft().asNameExpr().resolve();
+                JavaParserFieldDeclaration javaParserFieldDeclaration_r = (JavaParserFieldDeclaration) (resolvedValueDeclaration_r);
+                JavaParserFieldDeclaration javaParserFieldDeclaration_l = (JavaParserFieldDeclaration) (resolvedValueDeclaration_l);
+                Node node_right = javaParserFieldDeclaration_r.getWrappedNode();
+                Node node_left = javaParserFieldDeclaration_l.getWrappedNode();
+                if (node_left.equals(node_right)) {
+                    n.replace(integerLiteralExpr);
+                    change = true;
+                }
+            }
         }
     }
 
     public static String transformResource(String filename) throws IOException {
         CompilationUnit compilationUnit = JavaParser.parse(IOUtils.resourceToString(filename, Charset.defaultCharset()));
         TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
+        compilationUnit.setData(SYMBOL_RESOLVER_KEY, new JavaSymbolSolver(typeSolver));
         while (change) {
             change = false;
-            variableDeclarators.clear();
-            compilationUnit.accept(new Finding_name(), JavaParserFacade.get(typeSolver));
             compilationUnit.accept(new Finding_binary(), JavaParserFacade.get(typeSolver));
-            compilationUnit.accept(new Finding_variable(), JavaParserFacade.get(typeSolver));
-            compilationUnit.accept(new Finding_multiply(), JavaParserFacade.get(typeSolver));
             compilationUnit.accept(new Finding_enclose(), JavaParserFacade.get(typeSolver));
             compilationUnit.accept(new Finding_binary_name(), JavaParserFacade.get(typeSolver));
-//            compilationUnit.accept(new Changing_name_to_int(), JavaParserFacade.get(typeSolver));
         }
         return compilationUnit.toString();
     }
