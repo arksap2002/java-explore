@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 
 public class Parsing {
     public static void main(String[] args) throws IOException {
-        System.out.println(transformResource("/input5.java"));
+        System.out.println(transformResource("/input4.java"));
     }
 
     public static String transformResource(String filename) throws IOException {
