@@ -21,7 +21,6 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Random;
 
 import static com.github.javaparser.ast.Node.SYMBOL_RESOLVER_KEY;
 
@@ -30,7 +29,6 @@ public class ConvolutionOfConstants {
 
     public static void main(String[] args) throws IOException {
         System.out.println(transformResource("/input5.java"));
-//        System.out.println(Generating_test());
     }
 
 
@@ -48,7 +46,7 @@ public class ConvolutionOfConstants {
                     n.setInitializer(integerLiteralExpr);
                     change = true;
                 }
-                if (resolvedValueDeclaration instanceof  JavaParserFieldDeclaration) {
+                if (resolvedValueDeclaration instanceof JavaParserFieldDeclaration) {
                     FieldDeclaration fieldDeclaration = ((JavaParserFieldDeclaration) (resolvedValueDeclaration)).getWrappedNode();
                     IntegerLiteralExpr integerLiteralExpr = fieldDeclaration.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
                     n.setInitializer(integerLiteralExpr);
@@ -62,74 +60,30 @@ public class ConvolutionOfConstants {
             super.visit(n, javaParserFacade);
             IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
             number_and_number(n, integerLiteralExpr);
-            number_and_word(n, integerLiteralExpr);
-            word_and_word(n, integerLiteralExpr);
+            if (n.getLeft().isNameExpr()) {
+                ResolvedValueDeclaration resolvedValueDeclaration = n.getLeft().asNameExpr().resolve();
+                n.getLeft().replace(word(resolvedValueDeclaration));
+                change = true;
+            }
+            if (n.getRight().isNameExpr()) {
+                ResolvedValueDeclaration resolvedValueDeclaration = n.getRight().asNameExpr().resolve();
+                n.getRight().replace(word(resolvedValueDeclaration));
+                change = true;
+            }
+            number_and_number(n, integerLiteralExpr);
         }
 
-
-        private void word_and_word(BinaryExpr n, IntegerLiteralExpr integerLiteralExpr) {
-            if ((n.getRight().isNameExpr()) && (n.getLeft().isNameExpr())) {
-                integerLiteralExpr.setInt(0);
-                ResolvedValueDeclaration r = n.getRight().asNameExpr().resolve();
-                ResolvedValueDeclaration l = n.getLeft().asNameExpr().resolve();
-                if (r instanceof JavaParserFieldDeclaration && l instanceof JavaParserFieldDeclaration) {
-                    FieldDeclaration new_r = ((JavaParserFieldDeclaration) (r)).getWrappedNode();
-                    FieldDeclaration new_l = ((JavaParserFieldDeclaration) (l)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_r = new_r.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
-                    IntegerLiteralExpr literalExpr_l = new_l.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_l, literalExpr_r, integerLiteralExpr, n);
-                }
-                if (r instanceof JavaParserSymbolDeclaration && l instanceof JavaParserFieldDeclaration) {
-                    VariableDeclarator new_r = (VariableDeclarator) ((JavaParserSymbolDeclaration) (r)).getWrappedNode();
-                    FieldDeclaration new_l = ((JavaParserFieldDeclaration) (l)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_r = new_r.getInitializer().get().asIntegerLiteralExpr();
-                    IntegerLiteralExpr literalExpr_l = new_l.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_l, literalExpr_r, integerLiteralExpr, n);
-                }
-                if (r instanceof JavaParserFieldDeclaration && l instanceof JavaParserSymbolDeclaration) {
-                    FieldDeclaration new_r = ((JavaParserFieldDeclaration) (r)).getWrappedNode();
-                    VariableDeclarator new_l = (VariableDeclarator) ((JavaParserSymbolDeclaration) (l)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_r = new_r.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
-                    IntegerLiteralExpr literalExpr_l = new_l.getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_l, literalExpr_r, integerLiteralExpr, n);
-                }
-                if (r instanceof JavaParserSymbolDeclaration && l instanceof JavaParserSymbolDeclaration) {
-                    VariableDeclarator new_r = (VariableDeclarator) ((JavaParserSymbolDeclaration) (r)).getWrappedNode();
-                    VariableDeclarator new_l = (VariableDeclarator) ((JavaParserSymbolDeclaration) (l)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_r = new_r.getInitializer().get().asIntegerLiteralExpr();
-                    IntegerLiteralExpr literalExpr_l = new_l.getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_l, literalExpr_r, integerLiteralExpr, n);
-                }
+        private IntegerLiteralExpr word(ResolvedValueDeclaration resolvedValueDeclaration) {
+            IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
+            if (resolvedValueDeclaration instanceof JavaParserFieldDeclaration) {
+                FieldDeclaration fieldDeclaration = ((JavaParserFieldDeclaration) (resolvedValueDeclaration)).getWrappedNode();
+                integerLiteralExpr = fieldDeclaration.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
             }
-        }
-
-        private void number_and_word(BinaryExpr n, IntegerLiteralExpr integerLiteralExpr) {
-            if ((n.getRight().isNameExpr()) && (n.getLeft().isIntegerLiteralExpr())) {
-                ResolvedValueDeclaration r = n.getRight().asNameExpr().resolve();
-                if (r instanceof JavaParserFieldDeclaration) {
-                    FieldDeclaration new_r = ((JavaParserFieldDeclaration) (r)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_r = new_r.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_r, n.getLeft().asIntegerLiteralExpr(), integerLiteralExpr, n);
-                }
-                if (r instanceof JavaParserSymbolDeclaration) {
-                    VariableDeclarator new_r = (VariableDeclarator) ((JavaParserSymbolDeclaration) (r)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_r = new_r.getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_r, n.getLeft().asIntegerLiteralExpr(), integerLiteralExpr, n);
-                }
+            if (resolvedValueDeclaration instanceof JavaParserSymbolDeclaration) {
+                VariableDeclarator variableDeclarator = (VariableDeclarator) ((JavaParserSymbolDeclaration) (resolvedValueDeclaration)).getWrappedNode();
+                integerLiteralExpr = variableDeclarator.getInitializer().get().asIntegerLiteralExpr();
             }
-            if ((n.getRight().isIntegerLiteralExpr()) && (n.getLeft().isNameExpr())) {
-                ResolvedValueDeclaration l = n.getLeft().asNameExpr().resolve();
-                if (l instanceof JavaParserFieldDeclaration) {
-                    FieldDeclaration new_l = ((JavaParserFieldDeclaration) (l)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_l = new_l.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_l, n.getRight().asIntegerLiteralExpr(), integerLiteralExpr, n);
-                }
-                if (l instanceof JavaParserSymbolDeclaration) {
-                    VariableDeclarator new_l = (VariableDeclarator) ((JavaParserSymbolDeclaration) (l)).getWrappedNode();
-                    IntegerLiteralExpr literalExpr_l = new_l.getInitializer().get().asIntegerLiteralExpr();
-                    updating_math(literalExpr_l, n.getRight().asIntegerLiteralExpr(), integerLiteralExpr, n);
-                }
-            }
+            return integerLiteralExpr;
         }
 
         private void number_and_number(BinaryExpr n, IntegerLiteralExpr integerLiteralExpr) {
@@ -188,25 +142,5 @@ public class ConvolutionOfConstants {
         }
         System.out.println(number);
         return compilationUnit.toString();
-    }
-
-    public static String Generating_test() {
-        String[] words = {"a", "b", "c", "d", "e", "f", "g", "e", "k", "l", "m"};
-        String[] operators = {"+", "-", "*"};
-        Random random = new Random();
-        int number = 200;
-        return making_test(words, operators, random, number);
-    }
-
-    private static String making_test(String[] words, String[] operators, Random random, int number) {
-        if (number < 0) {
-            return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + Math.abs(random.nextInt()) % 100 + ")";
-        }
-        number--;
-        if (random.nextInt() % 2 == 0) {
-            return "(" + making_test(words, operators, random, number) + operators[Math.abs(random.nextInt()) % 3] + words[Math.abs(random.nextInt()) % 11] + ")";
-        } else {
-            return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + making_test(words, operators, random, number) + ")";
-        }
     }
 }
