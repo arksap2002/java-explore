@@ -11,6 +11,6 @@ class ConvolutionOfConstantsTest {
 
     @Test
     void transformResource() throws IOException {
-        Assertions.assertEquals(IOUtils.resourceToString("/ConvolutionOfConstants.java", Charset.defaultCharset()), ConvolutionOfConstants.transformResource("/input3.java"));
+        Assertions.assertEquals(IOUtils.resourceToString("/ConvolutionOfConstants.java", Charset.defaultCharset()), ConvolutionOfConstants.transformResource("/input5.java"));
     }
 }
