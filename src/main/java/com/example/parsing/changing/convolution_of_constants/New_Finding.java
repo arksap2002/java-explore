@@ -41,7 +41,6 @@ public class New_Finding extends ModifierVisitor<JavaParserFacade> {
     public Visitable visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
         super.visit(n, javaParserFacade);
         IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
-        number_and_number(n, integerLiteralExpr);
         if (n.getLeft().isNameExpr()) {
             ResolvedValueDeclaration resolvedValueDeclaration = n.getLeft().asNameExpr().resolve();
             n.getLeft().replace(word(resolvedValueDeclaration));

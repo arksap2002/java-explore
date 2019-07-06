@@ -39,7 +39,6 @@ public class Finding extends VoidVisitorAdapter<JavaParserFacade> {
     public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
         super.visit(n, javaParserFacade);
         IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
-        number_and_number(n, integerLiteralExpr);
         if (n.getLeft().isNameExpr()) {
             ResolvedValueDeclaration resolvedValueDeclaration = n.getLeft().asNameExpr().resolve();
             n.getLeft().replace(word(resolvedValueDeclaration));
