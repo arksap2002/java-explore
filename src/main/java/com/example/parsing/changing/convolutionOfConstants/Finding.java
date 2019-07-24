@@ -1,4 +1,4 @@
-package com.example.parsing.changing.convolution_of_constants;
+package com.example.parsing.changing.convolutionOfConstants;
 
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
@@ -24,32 +24,20 @@ public class Finding extends VoidVisitorAdapter<JavaParserFacade> {
                 VariableDeclarator variableDeclarator = (VariableDeclarator) ((JavaParserSymbolDeclaration) (resolvedValueDeclaration)).getWrappedNode();
                 IntegerLiteralExpr integerLiteralExpr = variableDeclarator.getInitializer().get().asIntegerLiteralExpr();
                 n.setInitializer(integerLiteralExpr);
-                Main.change = true;
             }
             if (resolvedValueDeclaration instanceof JavaParserFieldDeclaration) {
                 FieldDeclaration fieldDeclaration = ((JavaParserFieldDeclaration) (resolvedValueDeclaration)).getWrappedNode();
                 IntegerLiteralExpr integerLiteralExpr = fieldDeclaration.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
                 n.setInitializer(integerLiteralExpr);
-                Main.change = true;
             }
         }
     }
 
     @Override
-    public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
+    public void visit(NameExpr n, JavaParserFacade javaParserFacade) {
         super.visit(n, javaParserFacade);
-        IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
-        if (n.getLeft().isNameExpr()) {
-            ResolvedValueDeclaration resolvedValueDeclaration = n.getLeft().asNameExpr().resolve();
-            n.getLeft().replace(word(resolvedValueDeclaration));
-            Main.change = true;
-        }
-        if (n.getRight().isNameExpr()) {
-            ResolvedValueDeclaration resolvedValueDeclaration = n.getRight().asNameExpr().resolve();
-            n.getRight().replace(word(resolvedValueDeclaration));
-            Main.change = true;
-        }
-        number_and_number(n, integerLiteralExpr);
+        ResolvedValueDeclaration resolvedValueDeclaration = n.asNameExpr().resolve();
+        n.replace(word(resolvedValueDeclaration));
     }
 
     private IntegerLiteralExpr word(ResolvedValueDeclaration resolvedValueDeclaration) {
@@ -65,7 +53,10 @@ public class Finding extends VoidVisitorAdapter<JavaParserFacade> {
         return integerLiteralExpr;
     }
 
-    private void number_and_number(BinaryExpr n, IntegerLiteralExpr integerLiteralExpr) {
+    @Override
+    public void visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
+        super.visit(n, javaParserFacade);
+        IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
         if (n.getLeft().isIntegerLiteralExpr() && n.getRight().isIntegerLiteralExpr()) {
             integerLiteralExpr = new IntegerLiteralExpr();
             IntegerLiteralExpr left = new IntegerLiteralExpr();
@@ -94,7 +85,6 @@ public class Finding extends VoidVisitorAdapter<JavaParserFacade> {
             integerLiteralExpr.setInt(left.asInt() / right.asInt());
         }
         n.replace(integerLiteralExpr);
-        Main.change = true;
     }
 
     @Override
@@ -104,7 +94,6 @@ public class Finding extends VoidVisitorAdapter<JavaParserFacade> {
             IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
             integerLiteralExpr.setInt(n.getInner().asIntegerLiteralExpr().asInt());
             n.replace(integerLiteralExpr);
-            Main.change = true;
         }
     }
 }

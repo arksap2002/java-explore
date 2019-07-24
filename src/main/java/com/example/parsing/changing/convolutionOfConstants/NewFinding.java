@@ -1,4 +1,4 @@
-package com.example.parsing.changing.convolution_of_constants;
+package com.example.parsing.changing.convolutionOfConstants;
 
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
@@ -13,7 +13,7 @@ import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserFieldDeclaration;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserSymbolDeclaration;
 
-public class New_Finding extends ModifierVisitor<JavaParserFacade> {
+public class NewFinding extends ModifierVisitor<JavaParserFacade> {
 
     @Override
     public Visitable visit(VariableDeclarator n, JavaParserFacade javaParserFacade) {
@@ -25,33 +25,21 @@ public class New_Finding extends ModifierVisitor<JavaParserFacade> {
                 VariableDeclarator variableDeclarator = (VariableDeclarator) ((JavaParserSymbolDeclaration) (resolvedValueDeclaration)).getWrappedNode();
                 IntegerLiteralExpr integerLiteralExpr = variableDeclarator.getInitializer().get().asIntegerLiteralExpr();
                 n.setInitializer(integerLiteralExpr);
-                Main.change = true;
             }
             if (resolvedValueDeclaration instanceof JavaParserFieldDeclaration) {
                 FieldDeclaration fieldDeclaration = ((JavaParserFieldDeclaration) (resolvedValueDeclaration)).getWrappedNode();
                 IntegerLiteralExpr integerLiteralExpr = fieldDeclaration.getVariable(0).getInitializer().get().asIntegerLiteralExpr();
                 n.setInitializer(integerLiteralExpr);
-                Main.change = true;
             }
         }
         return n;
     }
 
     @Override
-    public Visitable visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
+    public Visitable visit(NameExpr n, JavaParserFacade javaParserFacade) {
         super.visit(n, javaParserFacade);
-        IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
-        if (n.getLeft().isNameExpr()) {
-            ResolvedValueDeclaration resolvedValueDeclaration = n.getLeft().asNameExpr().resolve();
-            n.getLeft().replace(word(resolvedValueDeclaration));
-            Main.change = true;
-        }
-        if (n.getRight().isNameExpr()) {
-            ResolvedValueDeclaration resolvedValueDeclaration = n.getRight().asNameExpr().resolve();
-            n.getRight().replace(word(resolvedValueDeclaration));
-            Main.change = true;
-        }
-        return number_and_number(n, integerLiteralExpr);
+        ResolvedValueDeclaration resolvedValueDeclaration = n.asNameExpr().resolve();
+        return word(resolvedValueDeclaration);
     }
 
     private IntegerLiteralExpr word(ResolvedValueDeclaration resolvedValueDeclaration) {
@@ -67,7 +55,10 @@ public class New_Finding extends ModifierVisitor<JavaParserFacade> {
         return integerLiteralExpr;
     }
 
-    private Visitable number_and_number(BinaryExpr n, IntegerLiteralExpr integerLiteralExpr) {
+    @Override
+    public Visitable visit(BinaryExpr n, JavaParserFacade javaParserFacade) {
+        super.visit(n, javaParserFacade);
+        IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
         if (n.getLeft().isIntegerLiteralExpr() && n.getRight().isIntegerLiteralExpr()) {
             integerLiteralExpr = new IntegerLiteralExpr();
             IntegerLiteralExpr left = new IntegerLiteralExpr();
@@ -96,7 +87,6 @@ public class New_Finding extends ModifierVisitor<JavaParserFacade> {
         if (n.getOperator() == BinaryExpr.Operator.DIVIDE) {
             integerLiteralExpr.setInt(left.asInt() / right.asInt());
         }
-        Main.change = true;
         return integerLiteralExpr;
     }
 
@@ -106,7 +96,6 @@ public class New_Finding extends ModifierVisitor<JavaParserFacade> {
         if (n.getInner().isIntegerLiteralExpr()) {
             IntegerLiteralExpr integerLiteralExpr = new IntegerLiteralExpr();
             integerLiteralExpr.setInt(n.getInner().asIntegerLiteralExpr().asInt());
-            Main.change = true;
             return integerLiteralExpr;
         }
         return n;

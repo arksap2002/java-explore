@@ -1,4 +1,4 @@
-package com.example.parsing.generation_of_big_tests;
+package com.example.parsing.generationOfBigTests;
 
 import java.util.Random;
 

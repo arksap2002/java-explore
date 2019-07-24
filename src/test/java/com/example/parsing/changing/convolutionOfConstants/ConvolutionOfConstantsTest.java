@@ -1,4 +1,4 @@
-package com.example.parsing.changing.convolution_of_constants;
+package com.example.parsing.changing.convolutionOfConstants;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
