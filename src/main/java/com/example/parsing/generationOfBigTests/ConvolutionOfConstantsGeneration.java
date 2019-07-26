@@ -12,8 +12,8 @@ public class ConvolutionOfConstantsGeneration {
         String[] words = {"a", "b", "c", "d", "e", "f", "g", "e", "k", "l", "m"};
         String[] operators = {"+", "-", "*"};
         Random random = new Random();
-        int number = 200;
-        return making_test(words, operators, random, number);
+        int number = 100;
+        return making_test(words, operators, random, number) + operators[Math.abs(random.nextInt()) % 3] + making_test(words, operators, random, number);
     }
 
     private static String making_test(String[] words, String[] operators, Random random, int number) {
