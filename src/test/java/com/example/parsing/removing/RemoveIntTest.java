@@ -1,16 +1,15 @@
 package com.example.parsing.removing;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
+import org.junit.Test;
+import org.junit.Assert;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-class RemoveIntTest {
+public class RemoveIntTest {
 
     @Test
-    void removing() throws IOException {
-        Assertions.assertEquals(IOUtils.resourceToString("/NoInt.java", Charset.defaultCharset()), RemoveInt.transformResource("/input.java"));
+    public void removing() throws IOException {
+        Assert.assertEquals(IOUtils.resourceToString("/NoInt.java", Charset.defaultCharset()), RemoveInt.transformResource("/input.java"));
     }
 }

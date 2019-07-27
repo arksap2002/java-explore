@@ -1,17 +1,15 @@
 package com.example.parsing;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Test;
-
+import org.junit.Test;
+import org.junit.Assert;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ParsingTest {
+public class ParsingTest {
 
     @Test
-    void parsing() throws IOException {
-        assertEquals(IOUtils.resourceToString("/PrintCode.java", Charset.defaultCharset()), Parsing.transformResource("/input.java"));
+    public void parsing() throws IOException {
+        Assert.assertEquals(IOUtils.resourceToString("/PrintCode.java", Charset.defaultCharset()), Parsing.transformResource("/input.java"));
     }
 }

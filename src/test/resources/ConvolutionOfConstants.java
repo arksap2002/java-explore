@@ -15,7 +15,7 @@ public class ConvolutionOfConstantsTest2 {
         final int k = 8;
         final int l = 17;
         final int m = 8;
-        final int n = -1848674888;
+        final int n = 127105856;
         final int o = -54;
     }
 }
