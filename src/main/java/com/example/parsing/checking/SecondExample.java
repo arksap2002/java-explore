@@ -9,9 +9,8 @@ public class SecondExample {
 
     public static void main(String[] args) throws FileNotFoundException {
         // write your code here
-        File file = new File("C:\\Users\\arksa\\Desktop\\Практика\\java-explore\\a.txt");
         PrintStream printStream = new PrintStream();
-        java.io.PrintStream printStream1 = new java.io.PrintStream(file);
+        java.io.PrintStream printStream1 = new java.io.PrintStream(System.out);
         Scanner scanner = new Scanner(System.in);
         int a = scanner.nextInt();
         int b = scanner.nextInt();

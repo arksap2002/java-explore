@@ -1,0 +1,12 @@
+1) Input (nextInt)
+2) Working with % / + - *
+3) Transformation number in BigInteger. (valueOf)
+4) a = bigint_a and a is not BigInteger (or a + bigint_a)
+5) Transformation == in equals
+6) Lists (NB: b[a[i]])
+7) Don't change length of lists
+8) Don't touch for and while (???)
+9) Problems with double
+10) Integer to BigInteger (in <>= and +-...)
+11) += and ++
+12) a < b -> a - b < 0 (or not)
