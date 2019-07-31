@@ -15,30 +15,24 @@ public class ConvolutionOfConstantsGeneration {
     public static String Generating_test() {
         Random random = new Random();
         int step = 100;
-        return new_making_test(random, step);
+        return making_test(random, step);
     }
 
-    private static String new_making_test(Random random, int number) {
-        if (number < 0) {
-            return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
-        }
-        number--;
-        if (random.nextInt() % 2 == 0) {
-            return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + new_making_test(random, number) + ")";
-        } else {
-            return "(" + new_making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
-        }
-    }
 
     private static String making_test(Random random, int number) {
         if (number < 0) {
             return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + Math.abs(random.nextInt()) % 100 + ")";
         }
         number--;
-        if (random.nextInt() % 2 == 0) {
+        int int_random = random.nextInt();
+        if (int_random % 4 == 0) {
             return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + words[Math.abs(random.nextInt()) % 11] + ")";
         } else {
-            return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
+            if (int_random % 4 == 1) {
+                return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
+            } else {
+                return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
+            }
         }
     }
 }

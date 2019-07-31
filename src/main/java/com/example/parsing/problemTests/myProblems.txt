@@ -1,6 +1,6 @@
-1) Input and output
+1) Input (nextInt)
 2) Working with % / + - *
-3) Transformation number in BigInteger. I can use only 0, 1, 2, 10 or valueOf
+3) Transformation number in BigInteger. (valueOf)
 4) a = bigint_a and a is not BigInteger (or a + bigint_a)
 5) Transformation == in equals
 6) Lists (NB: b[a[i]])
