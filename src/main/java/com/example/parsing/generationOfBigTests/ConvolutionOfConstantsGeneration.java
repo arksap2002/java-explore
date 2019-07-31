@@ -12,9 +12,9 @@ public class ConvolutionOfConstantsGeneration {
         System.out.println(Generating_test());
     }
 
-    public static String Generating_test() {
+    private static String Generating_test() {
         Random random = new Random();
-        int step = 100;
+        int step = 30;
         return making_test(random, step);
     }
 
