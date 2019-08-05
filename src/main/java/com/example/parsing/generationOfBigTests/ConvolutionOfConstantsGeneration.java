@@ -20,19 +20,16 @@ public class ConvolutionOfConstantsGeneration {
 
 
     private static String making_test(Random random, int number) {
-        if (number < 0) {
-            return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + Math.abs(random.nextInt()) % 100 + ")";
-        }
-        number--;
-        int int_random = random.nextInt();
-        if (int_random % 4 == 0) {
-            return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + words[Math.abs(random.nextInt()) % 11] + ")";
-        } else {
-            if (int_random % 4 == 1) {
-                return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
+        if (number != 0) {
+            number--;
+            if (random.nextInt() % 2 == 0) {
+                String[] strings = {String.valueOf(Math.abs(random.nextInt()) % 100), words[Math.abs(random.nextInt()) % 11]};
+                return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + strings[Math.abs(random.nextInt()) % 2] + ")";
             } else {
                 return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
             }
+        } else {
+            return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + Math.abs(random.nextInt()) % 100 + ")";
         }
     }
 }
