@@ -9,24 +9,24 @@ public class ConvolutionOfConstantsGeneration {
 
 
     public static void main(String[] args) {
-        System.out.println(Generating_test());
+        System.out.println(generatingTest());
     }
 
-    private static String Generating_test() {
+    private static String generatingTest() {
         Random random = new Random();
         int step = 30;
-        return making_test(random, step);
+        return makingTest(random, step);
     }
 
 
-    private static String making_test(Random random, int number) {
+    private static String makingTest(Random random, int number) {
         if (number != 0) {
             number--;
             if (random.nextInt() % 2 == 0) {
                 String[] strings = {String.valueOf(Math.abs(random.nextInt()) % 100), words[Math.abs(random.nextInt()) % 11]};
-                return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + strings[Math.abs(random.nextInt()) % 2] + ")";
+                return "(" + makingTest(random, number) + operators[Math.abs(random.nextInt()) % 3] + strings[Math.abs(random.nextInt()) % 2] + ")";
             } else {
-                return "(" + making_test(random, number) + operators[Math.abs(random.nextInt()) % 3] + making_test(random, number) + ")";
+                return "(" + makingTest(random, number) + operators[Math.abs(random.nextInt()) % 3] + makingTest(random, number) + ")";
             }
         } else {
             return "(" + Math.abs(random.nextInt()) % 100 + operators[Math.abs(random.nextInt()) % 3] + Math.abs(random.nextInt()) % 100 + ")";
